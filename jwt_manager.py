@@ -8,6 +8,7 @@ import bcrypt
 class JWTManager:
     @staticmethod
     def generate_tokens(user_id, username, role):
+        """Gera access token e refresh token"""
         now = datetime.utcnow()
         access_payload = {
             'user_id': user_id,
@@ -77,7 +78,8 @@ class JWTManager:
             return None
         
         user_id = payload.get('user_id')
-                refresh_db = RefreshToken.query.filter_by(is_revoked=False).first()
+        
+        refresh_db = RefreshToken.query.filter_by(is_revoked=False).first()
         if not refresh_db or not refresh_db.is_valid():
             return None
         
@@ -133,7 +135,6 @@ def token_required(f):
         return f(payload, *args, **kwargs)
     
     return decorated
-
 
 def admin_required(f):
     @wraps(f)
